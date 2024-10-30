@@ -1,8 +1,8 @@
 package holafly.AppiumAutomation;
 
 import java.io.File;
+import java.time.Duration;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.testng.annotations.AfterClass;
@@ -19,7 +19,7 @@ public class AppiumConfiguration {
 	public AppiumDriverLocalService service;
 	
 	@BeforeClass
-	public void startAppium() throws URISyntaxException, MalformedURLException {
+	public void startAppium() {
 		service = new AppiumServiceBuilder()
 				.withAppiumJS(new File("C:\\Users\\kelvi\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js"))
 				.withIPAddress("127.0.0.1")
@@ -30,15 +30,16 @@ public class AppiumConfiguration {
 		//Capabilities
 		UiAutomator2Options options = new UiAutomator2Options();
 		options.setPlatformName("Android"); 
-		options.setDeviceName("Pixel-8-Pro-API-35"); 
+		options.setDeviceName("Pixel-8-Pro-API-35k"); 
 		options.setAutomationName("UIAutomator2"); 
 		options.setAppPackage("com.holafly.holafly"); 
 		options.setAppActivity("com.holafly.holafly.ui.activity.SplashActivity"); 
 		options.autoGrantPermissions();
-		options.noReset(); 
+		options.setNoReset(false); 
 		
 		//Initialize driver
-		driver = new AndroidDriver(new URI("http://127.0.0.1:4723").toURL(),options);
+		driver = new AndroidDriver(options);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 	}
 	
 	@AfterClass
@@ -46,5 +47,6 @@ public class AppiumConfiguration {
 		driver.quit();
 		service.stop();
 	}
+
 
 }
